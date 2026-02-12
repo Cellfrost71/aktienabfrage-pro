@@ -1,54 +1,93 @@
-function randomNormal() {
-  let u = 0, v = 0;
-  while(u === 0) u = Math.random();
-  while(v === 0) v = Math.random();
-  return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+const API_KEY = "eklHeYrFeHyxGINKs29bAXeMUoH6KoYn";
+const API_KEY = "DEIN_API_KEY_HIER";
+
+let portfolio = [];
+let chart;
+
+function addPosition() {
+  const symbol = document.getElementById("symbol").value.toUpperCase();
+  const shares = parseFloat(document.getElementById("shares").value);
+  const buyPrice = parseFloat(document.getElementById("buyPrice").value);
+
+  if (!symbol || !shares || !buyPrice) return;
+
+  portfolio.push({ symbol, shares, buyPrice });
+  fetchPrices();
 }
 
-function runSimulation() {
-  let startValue = parseFloat(document.getElementById("startValue").value);
-  let expectedReturn = parseFloat(document.getElementById("expectedReturn").value) / 100;
-  let volatility = parseFloat(document.getElementById("volatility").value) / 100;
+async function fetchPrices() {
+  for (let position of portfolio) {
+    const response = await fetch(
+      `https://financialmodelingprep.com/api/v3/quote/${position.symbol}?apikey=${API_KEY}`
+    );
+    const data = await response.json();
 
-  let days = 252;
-  let price = startValue;
-
-  for (let i = 0; i < days; i++) {
-    let dailyReturn = (expectedReturn / 252) +
-      volatility * Math.sqrt(1/252) * randomNormal();
-    price *= (1 + dailyReturn);
+    if (data && data[0]) {
+      position.currentPrice = data[0].price;
+    }
   }
-
-  document.getElementById("mcResult").innerText =
-    "Erwarteter Endwert nach 1 Jahr: €" + price.toFixed(2);
+  renderPortfolio();
 }
 
+function renderPortfolio() {
+  const container = document.getElementById("portfolio");
+  container.innerHTML = "";
 
-function calculateSharpe() {
-  let returns = [0.01, -0.005, 0.012, 0.008, -0.002];
-  let riskFreeRate = 0.02 / 252;
+  let totalValue = 0;
+  let totalInvested = 0;
 
-  let avg = returns.reduce((a,b)=>a+b,0)/returns.length;
-  let variance = returns.map(r=>Math.pow(r-avg,2))
-    .reduce((a,b)=>a+b,0)/returns.length;
+  portfolio.forEach(pos => {
+    const value = pos.currentPrice * pos.shares;
+    const invested = pos.buyPrice * pos.shares;
+    const performance = value - invested;
 
-  let stdDev = Math.sqrt(variance);
+    totalValue += value;
+    totalInvested += invested;
 
-  let sharpe = (avg - riskFreeRate) / stdDev * Math.sqrt(252);
+    container.innerHTML += `
+      <p>
+        <strong>${pos.symbol}</strong><br>
+        Wert: €${value.toFixed(2)}<br>
+        Performance: <span class="${performance >= 0 ? 'green' : 'red'}">
+        €${performance.toFixed(2)}
+        </span>
+      </p>
+    `;
+  });
 
-  document.getElementById("sharpeResult").innerText =
-    "Sharpe Ratio: " + sharpe.toFixed(2);
+  const totalPerf = totalValue - totalInvested;
+
+  document.getElementById("totalValue").innerText =
+    "Gesamtwert: €" + totalValue.toFixed(2);
+
+  document.getElementById("totalPerformance").innerHTML =
+    `Gesamt Performance: <span class="${totalPerf >= 0 ? 'green' : 'red'}">
+    €${totalPerf.toFixed(2)}</span>`;
+
+  updateChart(totalValue);
 }
 
-function calculateVaR() {
-  let returns = [];
-  for (let i=0; i<1000; i++) {
-    returns.push(randomNormal() * 0.02);
+function updateChart(value) {
+  const ctx = document.getElementById("portfolioChart").getContext("2d");
+
+  if (!chart) {
+    chart = new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: ["Start", "Jetzt"],
+        datasets: [{
+          label: "Depot Wert",
+          data: [0, value],
+          borderColor: "#3b82f6"
+        }]
+      }
+    });
+  } else {
+    chart.data.datasets[0].data[1] = value;
+    chart.update();
   }
-  returns.sort((a,b)=>a-b);
-  let var95 = returns[Math.floor(returns.length*0.05)];
-
-  document.getElementById("varResult").innerText =
-    "VaR (95%): " + (var95*100).toFixed(2) + "%";
 }
+
+
+
 
