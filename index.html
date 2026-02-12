@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aktienabfrage Pro</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>Aktienabfrage Pro – Quant Edition</h1>
+
+  <div class="card">
+    <h2>Monte Carlo Simulation</h2>
+    <button onclick="runSimulation()">Simulation starten</button>
+    <p id="mcResult"></p>
+  </div>
+
+  <div class="card">
+    <h2>Sharpe Ratio</h2>
+    <button onclick="calculateSharpe()">Berechnen</button>
+    <p id="sharpeResult"></p>
+  </div>
+
+  <div class="card">
+    <h2>Value at Risk (95%)</h2>
+    <button onclick="calculateVaR()">Berechnen</button>
+    <p id="varResult"></p>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
