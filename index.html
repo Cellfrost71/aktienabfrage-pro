@@ -6,41 +6,34 @@
   <title>Aktienabfrage Pro</title>
   <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <h1>Aktienabfrage Pro – Quant Edition</h1>
 
-  <div class="card">
-    <h2>Portfolio Simulation</h2>
+  <div class="container">
+    <h1>Aktienabfrage Pro</h1>
 
-    <label>Startkapital (€)</label>
-    <input type="number" id="startValue" value="10000" />
+    <div class="card">
+      <h2>Neue Position hinzufügen</h2>
+      <input type="text" id="symbol" placeholder="Symbol (z.B. AAPL)" />
+      <input type="number" id="shares" placeholder="Stückzahl" />
+      <input type="number" id="buyPrice" placeholder="Kaufpreis (€)" />
+      <button onclick="addPosition()">Hinzufügen</button>
+    </div>
 
-    <label>Erwartete Jahresrendite (%)</label>
-    <input type="number" id="expectedReturn" value="8" />
+    <div class="card">
+      <h2>Depot Übersicht</h2>
+      <div id="portfolio"></div>
+      <h3 id="totalValue"></h3>
+      <h3 id="totalPerformance"></h3>
+    </div>
 
-    <label>Volatilität (%)</label>
-    <input type="number" id="volatility" value="20" />
-
-    <button onclick="runSimulation()">Simulation starten</button>
-
-    <p id="mcResult"></p>
-  </div>
-
-  <div class="card">
-    <h2>Sharpe Ratio</h2>
-    <button onclick="calculateSharpe()">Berechnen</button>
-    <p id="sharpeResult"></p>
-  </div>
-
-  <div class="card">
-    <h2>Value at Risk (95%)</h2>
-    <button onclick="calculateVaR()">Berechnen</button>
-    <p id="varResult"></p>
+    <div class="card">
+      <h2>Performance Chart</h2>
+      <canvas id="portfolioChart"></canvas>
+    </div>
   </div>
 
   <script src="app.js"></script>
 </body>
-
 </html>
-
