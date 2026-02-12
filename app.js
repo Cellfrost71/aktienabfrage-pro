@@ -6,9 +6,10 @@ function randomNormal() {
 }
 
 function runSimulation() {
-  let startValue = 10000;
-  let expectedReturn = 0.08;
-  let volatility = 0.2;
+  let startValue = parseFloat(document.getElementById("startValue").value);
+  let expectedReturn = parseFloat(document.getElementById("expectedReturn").value) / 100;
+  let volatility = parseFloat(document.getElementById("volatility").value) / 100;
+
   let days = 252;
   let price = startValue;
 
@@ -19,8 +20,9 @@ function runSimulation() {
   }
 
   document.getElementById("mcResult").innerText =
-    "Erwarteter Endwert: €" + price.toFixed(2);
+    "Erwarteter Endwert nach 1 Jahr: €" + price.toFixed(2);
 }
+
 
 function calculateSharpe() {
   let returns = [0.01, -0.005, 0.012, 0.008, -0.002];
@@ -49,3 +51,4 @@ function calculateVaR() {
   document.getElementById("varResult").innerText =
     "VaR (95%): " + (var95*100).toFixed(2) + "%";
 }
+
