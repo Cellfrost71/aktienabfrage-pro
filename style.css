@@ -1,15 +1,30 @@
 body {
+  margin: 0;
   font-family: Arial, sans-serif;
   background: #0f172a;
   color: white;
+}
+
+.container {
+  max-width: 600px;
+  margin: auto;
   padding: 20px;
 }
 
 .card {
   background: #1e293b;
   padding: 20px;
-  margin: 20px 0;
-  border-radius: 10px;
+  margin-bottom: 20px;
+  border-radius: 12px;
+}
+
+input {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
 }
 
 button {
@@ -17,5 +32,9 @@ button {
   background: #3b82f6;
   border: none;
   color: white;
-  border-radius: 5px;
+  border-radius: 6px;
+  width: 100%;
 }
+
+.green { color: #22c55e; }
+.red { color: #ef4444; }
